@@ -1,4 +1,4 @@
-import { ChecklistSummary } from '@/types/checklist.types';
+import { ChecklistSummary, Checklist } from '@/types/checklist.types';
 
 export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -99,20 +99,34 @@ export const getActionStatusColor = (status: 'open' | 'pending' | 'overdue' | 'c
 };
 
 // Debounce function for search input
-export const debounce = <T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): ((...args: Parameters<T>) => void) => {
+export const debounce = (func: (searchTerm: string) => void, wait: number) => {
   let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
+  return (searchTerm: string) => {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
+    timeout = setTimeout(() => func(searchTerm), wait);
   };
 };
 
 // Format percentage with proper rounding
 export const formatPercent = (value: number): string => {
   return `${Math.round(value)}%`;
+};
+
+// Calculate completion percentage (matches backend logic)
+export const calculateCompletionPercentage = (checklist: Checklist): number => {
+  let totalItems = 0;
+  let answeredItems = 0;
+
+  for (const section of checklist.sections) {
+    for (const item of section.items) {
+      totalItems++;
+      if (item.response === 'yes' || item.response === 'no' || item.response === 'n/a') {
+        answeredItems++;
+      }
+    }
+  }
+
+  return totalItems === 0 ? 0 : Math.round((answeredItems / totalItems) * 100);
 };
 
 // Download CSV function

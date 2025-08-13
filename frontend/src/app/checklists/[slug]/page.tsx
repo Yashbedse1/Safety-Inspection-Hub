@@ -8,17 +8,15 @@ interface PageProps {
 export default function ChecklistDetailPage({ params }: PageProps) {
   const { slug } = use(params);
 
-  // Parse the slug to extract ID and building name
+  // Parse the slug to extract ID
   const parts = slug.split('-');
 
   // finding ID in the format chk-XXX
   let id = '';
-  let buildingNameParts: string[] = [];
 
   for (let i = 0; i < parts.length - 1; i++) {
     if (parts[i] === 'chk' && /^\d+$/.test(parts[i + 1])) {
       id = `${parts[i]}-${parts[i + 1]}`;
-      buildingNameParts = parts.slice(0, i);
       break;
     }
   }
@@ -27,7 +25,6 @@ export default function ChecklistDetailPage({ params }: PageProps) {
     for (let i = parts.length - 1; i >= 0; i--) {
       if (parts[i].startsWith('chk')) {
         id = parts[i];
-        buildingNameParts = parts.slice(0, i);
         break;
       }
     }
@@ -38,14 +35,8 @@ export default function ChecklistDetailPage({ params }: PageProps) {
     const lastPart = parts[parts.length - 1];
     if (lastPart.includes('chk') || /^\d+$/.test(lastPart)) {
       id = lastPart;
-      buildingNameParts = parts.slice(0, -1);
     }
   }
-
-  const buildingName = buildingNameParts
-    .join('-')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (l) => l.toUpperCase());
 
   if (!id) {
     return (

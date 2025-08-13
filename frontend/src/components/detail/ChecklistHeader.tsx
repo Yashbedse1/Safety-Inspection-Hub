@@ -1,5 +1,5 @@
 import { Checklist } from '@/types/checklist.types';
-import { formatDate, getStatusColor, getStatusLabel, formatPercent, downloadCsv, generateCsvFilename, createBuildingSlug } from '@/lib/utils';
+import { formatDate, getStatusColor, getStatusLabel, formatPercent, downloadCsv, generateCsvFilename, createBuildingSlug, calculateCompletionPercentage } from '@/lib/utils';
 import { generateChecklistCsv } from '@/lib/csvExport';
 
 interface ChecklistHeaderProps {
@@ -13,6 +13,9 @@ export const ChecklistHeader = ({ checklist }: ChecklistHeaderProps) => {
     const filename = generateCsvFilename(slug);
     downloadCsv(csvData, filename);
   };
+
+  // Calculate completion percentage to ensure consistency with dashboard
+  const completionPercentage = calculateCompletionPercentage(checklist);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
@@ -71,7 +74,7 @@ export const ChecklistHeader = ({ checklist }: ChecklistHeaderProps) => {
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-gray-500">Completion:</span>
               <span className="text-lg font-semibold text-gray-900">
-                {formatPercent(checklist.overallCompletionPercentage)}
+                {formatPercent(completionPercentage)}
               </span>
             </div>
             <span
