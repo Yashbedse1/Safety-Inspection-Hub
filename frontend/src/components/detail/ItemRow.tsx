@@ -26,12 +26,12 @@ export const ItemRow = ({ item }: ItemRowProps) => {
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium ${
               response === 'yes'
-                ? 'bg-green-100 text-green-800'
+                ? 'bg-green-200 text-green-800'
                 : response === 'no'
-                ? 'bg-red-100 text-red-800'
+                ? 'bg-red-200 text-red-800'
                 : response === 'n/a'
-                ? 'bg-gray-100 text-gray-800'
-                : 'bg-gray-100 text-gray-600'
+                ? 'bg-gray-200 text-gray-800'
+                : 'bg-gray-200 text-gray-600'
             }`}
           >
             {mapResponseToLabel(response)}

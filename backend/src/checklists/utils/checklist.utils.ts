@@ -1,4 +1,4 @@
-import { Checklist, ChecklistItem } from '../types/checklist.types';
+import { Checklist } from '../types/checklist.types';
 
 /**
  * Calculate completion percentage for a checklist

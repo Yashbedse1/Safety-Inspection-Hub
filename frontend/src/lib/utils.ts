@@ -14,15 +14,15 @@ export const formatDate = (dateString: string): string => {
 export const getStatusColor = (status: ChecklistSummary['status']) => {
   switch (status) {
     case 'completed':
-      return 'bg-green-100 text-green-800 border-green-200';
+      return 'bg-green-300 text-green-800 border-green-200';
     case 'in_progress':
-      return 'bg-amber-100 text-amber-800 border-amber-200';
+      return 'bg-amber-300 text-amber-800 border-amber-200';
     case 'requires_review':
-      return 'bg-red-100 text-red-800 border-red-200';
+      return 'bg-red-300 text-red-800 border-red-200';
     case 'draft':
-      return 'bg-gray-100 text-gray-800 border-gray-200';
+      return 'bg-gray-300 text-gray-800 border-gray-200';
     default:
-      return 'bg-gray-100 text-gray-800 border-gray-200';
+      return 'bg-gray-300 text-gray-800 border-gray-200';
   }
 };
 
