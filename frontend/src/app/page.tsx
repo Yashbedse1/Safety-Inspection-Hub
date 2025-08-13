@@ -1,84 +1,67 @@
 'use client';
 
+import { useState } from 'react';
 import { useChecklists } from '@/hooks/useChecklists';
+import { useFilteredChecklists } from '@/hooks/useFilteredChecklists';
+import { FilterState } from '@/types/checklist.types';
 import { ChecklistCard } from '@/components/ChecklistCard';
 import { LoadingSkeleton } from '@/components/LoadingSkeleton';
 import { ErrorState } from '@/components/ErrorState';
+import { OverviewControls } from '@/components/OverviewControls';
+import { StatsBar } from '@/components/StatsBar';
 
-export default function Home() {
-  const { data: checklists, isLoading, error, refetch } = useChecklists();
+export default function HomePage() {
+  const { data: checklists = [], isLoading, error, refetch } = useChecklists();
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    status: [],
+    completion: 'all',
+    sort: 'lastUpdated',
+  });
+
+  const { filteredChecklists, stats } = useFilteredChecklists(checklists, filters);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Safety Inspection Hub
-            </h1>
-            <p className="text-gray-600">
-              Manage and track building safety inspection checklists
-            </p>
-          </div>
-          <LoadingSkeleton />
-        </div>
-      </div>
-    );
+    return <LoadingSkeleton />;
   }
 
   if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Safety Inspection Hub
-            </h1>
-            <p className="text-gray-600">
-              Manage and track building safety inspection checklists
-            </p>
-          </div>
-          <ErrorState error={error} onRetry={() => refetch()} />
-        </div>
-      </div>
-    );
+    return <ErrorState error={error} onRetry={refetch} />;
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
+      <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Safety Inspection Hub
+            Fire Safety Inspection Hub
           </h1>
           <p className="text-gray-600">
-            Manage and track building safety inspection checklists
+            Manage and review building safety inspection checklists
           </p>
         </div>
 
-        {/* Content */}
-        {checklists && checklists.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {checklists.map((checklist) => (
-              <ChecklistCard key={checklist.id} checklist={checklist} />
-            ))}
-          </div>
-        ) : (
+        {/* Controls */}
+        <OverviewControls onFiltersChange={setFilters} />
+
+        {/* Statistics */}
+        <StatsBar stats={stats} />
+
+        {/* Results */}
+        {filteredChecklists.length === 0 ? (
           <div className="text-center py-12">
-            <div className="mb-4">
+            <div className="text-gray-400 mb-4">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-12 w-12"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33"
                 />
               </svg>
             </div>
@@ -86,8 +69,16 @@ export default function Home() {
               No checklists found
             </h3>
             <p className="text-gray-600">
-              There are no safety inspection checklists available at the moment.
+              {checklists.length === 0
+                ? 'No checklists are available.'
+                : 'Try adjusting your search or filters to find what you\'re looking for.'}
             </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredChecklists.map((checklist) => (
+              <ChecklistCard key={checklist.id} checklist={checklist} />
+            ))}
           </div>
         )}
       </div>

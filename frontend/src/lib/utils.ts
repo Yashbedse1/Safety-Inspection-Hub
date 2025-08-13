@@ -54,3 +54,83 @@ export const createChecklistUrl = (id: string, buildingName: string): string => 
   const slug = createBuildingSlug(buildingName);
   return `/checklists/${slug}-${id}`;
 };
+
+export const mapResponseToLabel = (response: 'yes' | 'no' | 'n/a' | null): string => {
+  switch (response) {
+    case 'yes':
+      return 'Yes';
+    case 'no':
+      return 'No';
+    case 'n/a':
+      return 'Not applicable';
+    case null:
+      return 'Not answered';
+    default:
+      return 'Not answered';
+  }
+};
+
+export const getPriorityColor = (priority: 'low' | 'medium' | 'high') => {
+  switch (priority) {
+    case 'high':
+      return 'bg-red-100 text-red-800 border-red-200';
+    case 'medium':
+      return 'bg-amber-100 text-amber-800 border-amber-200';
+    case 'low':
+      return 'bg-green-100 text-green-800 border-green-200';
+    default:
+      return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+};
+
+export const getActionStatusColor = (status: 'open' | 'pending' | 'overdue' | 'completed') => {
+  switch (status) {
+    case 'completed':
+      return 'bg-green-100 text-green-800 border-green-200';
+    case 'overdue':
+      return 'bg-red-100 text-red-800 border-red-200';
+    case 'pending':
+      return 'bg-amber-100 text-amber-800 border-amber-200';
+    case 'open':
+      return 'bg-blue-100 text-blue-800 border-blue-200';
+    default:
+      return 'bg-gray-100 text-gray-800 border-gray-200';
+  }
+};
+
+// Debounce function for search input
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): ((...args: Parameters<T>) => void) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
+
+// Format percentage with proper rounding
+export const formatPercent = (value: number): string => {
+  return `${Math.round(value)}%`;
+};
+
+// Download CSV function
+export const downloadCsv = (data: string, filename: string): void => {
+  const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+// Generate CSV filename
+export const generateCsvFilename = (slug: string): string => {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  return `${slug}-checklist-${date}.csv`;
+};

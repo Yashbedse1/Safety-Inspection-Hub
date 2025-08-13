@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ChecklistSummary, ApiError } from '@/types/checklist.types';
+import { ChecklistSummary, Checklist, ApiError } from '@/types/checklist.types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000';
 
@@ -25,6 +25,10 @@ apiClient.interceptors.response.use(
 export const checklistsApi = {
   getAll: async (): Promise<ChecklistSummary[]> => {
     const response = await apiClient.get('/api/checklists');
+    return response.data;
+  },
+  getById: async (id: string): Promise<Checklist> => {
+    const response = await apiClient.get(`/api/checklists/${id}`);
     return response.data;
   },
 };

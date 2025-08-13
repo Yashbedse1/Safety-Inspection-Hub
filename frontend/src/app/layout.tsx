@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Safety Inspection Hub",
+  title: "Fire Safety Inspection Hub",
   description: "Manage building safety inspection checklists",
 };
 
