@@ -56,11 +56,15 @@ export const ChecklistHeader = ({ checklist }: ChecklistHeaderProps) => {
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Assessor</dt>
-              <dd className="text-sm text-gray-900">{checklist.assessor}</dd>
+              <dd className="text-sm text-gray-900">
+                {checklist.assessor ? checklist.assessor : '—'}
+                </dd>
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Assessment Date</dt>
-              <dd className="text-sm text-gray-900">{formatDate(checklist.dateOfAssessment)}</dd>
+              <dd className="text-sm text-gray-900">
+                {checklist.dateOfAssessment ? formatDate(checklist.dateOfAssessment) : '—'}
+                </dd>
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Next Review</dt>
